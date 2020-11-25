@@ -1,5 +1,3 @@
-import { EmojiData } from 'emoji-mart';
-
 export type PlayerInfo = {
   name: string;
   emoji: string;

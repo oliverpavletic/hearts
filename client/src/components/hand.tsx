@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import styled from 'styled-components';
-import { DummyClickHandler } from '../types/cardClickHandler';
-import { Suit } from '../types/suit';
-import Card from './card';
+import React, { ReactElement } from "react";
+import styled from "styled-components";
+import { DummyClickHandler } from "../types/cardClickHandler";
+import { Suit } from "../types/suit";
+import Card from "./card";
 
 const HandContainer = styled.div`
   display: table;
@@ -18,10 +18,16 @@ const CardContainer = styled.div`
 
 // Used to prevent resizing of the Hands height
 const DummyCard = (
-  <Card suit={Suit.SPADES} value={0} invisible={true} rotation={undefined} handleCardClick={DummyClickHandler} />
+  <Card
+    suit={Suit.SPADES}
+    value={0}
+    invisible={true}
+    rotation={undefined}
+    handleCardClick={DummyClickHandler}
+  />
 );
 
-function Hand(props: { cards: ReactElement<Card>[] }) {
+function Hand(props: { cards: ReactElement<Card>[] }): ReactElement {
   const { cards } = props;
   let key = 0;
   return (

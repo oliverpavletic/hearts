@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
-import styled from 'styled-components';
-import Card from './card';
+import React, { ReactElement } from "react";
+import styled from "styled-components";
+import Card from "./card";
 
 const Center = styled.div`
   position: absolute;
@@ -15,7 +15,7 @@ type BoardCenterProps = {
   cards: (Card | ReactElement)[];
 };
 
-function BoardCenter(props: BoardCenterProps) {
+function BoardCenter(props: BoardCenterProps): ReactElement {
   const { cards } = props;
 
   return (

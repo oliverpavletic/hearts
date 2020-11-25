@@ -1,15 +1,14 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { ReactElement } from "react";
+import styled from "styled-components";
 
-import { PlayerInfo } from '../types/playerInfo';
-import { Rotation } from '../types/rotation';
+import { PlayerInfo } from "../types/playerInfo";
+import { Rotation } from "../types/rotation";
 import {
   COLOR_DIMMED_DISCONNECTED,
   COLOR_DIMMED_DISCONNECTED_HOVER,
   COLOR_LIGHT_NAVY,
   COLOR_GOLDEN_SHADOW,
-} from '../colors';
-import { Emoji } from 'emoji-mart';
+} from "../colors";
 
 const Container = styled.div`
   position: absolute;
@@ -17,7 +16,7 @@ const Container = styled.div`
   padding-left: 0.5em;
   padding-right: 0.5em;
   text-align: left;
-  font-family: 'Baloo Tamma 2', cursive;
+  font-family: "Baloo Tamma 2", cursive;
   color: whitesmoke;
   background: ${(props: {
     rotation: Rotation;
@@ -128,8 +127,15 @@ type PlayerProps = {
   suspendPlayerClickHandlers: boolean;
 };
 
-function Player(props: PlayerProps) {
-  const { info, rotation, hasAction, handleClickAddBotBtn, handleClickPlayerEmoji, suspendPlayerClickHandlers } = props;
+function Player(props: PlayerProps): ReactElement {
+  const {
+    info,
+    rotation,
+    hasAction,
+    handleClickAddBotBtn,
+    handleClickPlayerEmoji,
+    suspendPlayerClickHandlers,
+  } = props;
   let content;
 
   if (info === null) {
@@ -137,14 +143,19 @@ function Player(props: PlayerProps) {
   } else {
     content = (
       <>
-        <Icon dimmed={!info.isConnected} onClick={suspendPlayerClickHandlers ? undefined : handleClickPlayerEmoji}>
+        <Icon
+          dimmed={!info.isConnected}
+          onClick={
+            suspendPlayerClickHandlers ? undefined : handleClickPlayerEmoji
+          }
+        >
           {info.emoji}
         </Icon>
         <NameScoreWrapper>
           <Name>{info.name}</Name>
           <Score>
             {info.totalScore}
-            {' | '}
+            {" | "}
             {info.roundScore}
           </Score>
         </NameScoreWrapper>
@@ -159,7 +170,13 @@ function Player(props: PlayerProps) {
       hasAction={hasAction}
       dimmed={info === null || !info.isConnected}
       hoverable={info === null}
-      onClick={info === null && !suspendPlayerClickHandlers ? handleClickAddBotBtn : () => {}}
+      onClick={
+        info === null && !suspendPlayerClickHandlers
+          ? handleClickAddBotBtn
+          : () => {
+              return;
+            }
+      }
     >
       {content}
     </Container>

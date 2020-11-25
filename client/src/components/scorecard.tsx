@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import OutsideClickHandler from 'react-outside-click-handler';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
+import OutsideClickHandler from "react-outside-click-handler";
 
-import { Table } from 'react-bootstrap';
-import { ScorecardData } from '../types/scorecardData';
-import { COLOR_LIGHTEST_GREY } from '../colors';
+import { Table } from "react-bootstrap";
+import { ScorecardData } from "../types/scorecardData";
+import { COLOR_LIGHTEST_GREY } from "../colors";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -63,8 +63,8 @@ type ScorecardProps = {
   handleOutsideClick: () => void;
 };
 
-class Scorecard extends Component<ScorecardProps, {}> {
-  render() {
+class Scorecard extends Component<ScorecardProps, Record<string, never>> {
+  render(): ReactElement {
     const { scorecardData, handleOutsideClick } = this.props;
 
     return (

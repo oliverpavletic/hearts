@@ -1,11 +1,11 @@
-import React, { Component, ReactElement } from 'react';
-import styled from 'styled-components';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
 
-import BoardCenter from './boardCenter';
-import Card from './card';
-import { Rotation } from '../types/rotation';
-import Player from './player';
-import { PlayerInfo } from '../types/playerInfo';
+import BoardCenter from "./boardCenter";
+import Card from "./card";
+import { Rotation } from "../types/rotation";
+import Player from "./player";
+import { PlayerInfo } from "../types/playerInfo";
 
 const BoardContainer = styled.div`
   position: relative;
@@ -31,7 +31,7 @@ const GameCodeContainer = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Baloo Tamma 2', cursive;
+  font-family: "Baloo Tamma 2", cursive;
   height: 2em;
   width: 5em;
   color: whitesmoke;
@@ -62,6 +62,7 @@ type BoardProps = {
   handleClickAddBotBtn: () => void;
   handleClickPlayerEmoji: () => void;
   suspendPlayerClickHandlers: boolean;
+  handleLogError: (error: string) => void;
 };
 
 class Board extends Component<BoardProps> {
@@ -70,20 +71,19 @@ class Board extends Component<BoardProps> {
     this.copyCodeToClip = this.copyCodeToClip.bind(this);
   }
 
-  copyCodeToClip() {
-    // ? FIXME
+  copyCodeToClip(): void {
+    const { gameCode, handleLogError } = this.props;
     try {
-      const { gameCode } = this.props;
       if (gameCode === null) {
-        throw new Error('Unexpected copy when gameCode=null');
+        throw new Error("Unexpected copy when gameCode=null");
       }
       navigator.clipboard.writeText(gameCode);
     } catch (e) {
-      console.log('clipboard not accessible');
+      handleLogError(`clipboard not accessible: ${e}`);
     }
   }
 
-  render() {
+  render(): ReactElement {
     const {
       cards,
       playersInfo,
@@ -109,31 +109,43 @@ class Board extends Component<BoardProps> {
         <Player
           info={playersInfo[(position + 1) % 4]}
           rotation={Rotation.LEFT}
-          hasAction={turnPosition !== null && turnPosition === (position + 1) % 4}
+          hasAction={
+            turnPosition !== null && turnPosition === (position + 1) % 4
+          }
           handleClickAddBotBtn={handleClickAddBotBtn}
-          handleClickPlayerEmoji={() => {}}
+          handleClickPlayerEmoji={() => {
+            return;
+          }}
           suspendPlayerClickHandlers={suspendPlayerClickHandlers}
         />
         <Player
           info={playersInfo[(position + 2) % 4]}
           rotation={Rotation.TOP}
-          hasAction={turnPosition !== null && turnPosition === (position + 2) % 4}
+          hasAction={
+            turnPosition !== null && turnPosition === (position + 2) % 4
+          }
           handleClickAddBotBtn={handleClickAddBotBtn}
-          handleClickPlayerEmoji={() => {}}
+          handleClickPlayerEmoji={() => {
+            return;
+          }}
           suspendPlayerClickHandlers={suspendPlayerClickHandlers}
         />
         <Player
           info={playersInfo[(position + 3) % 4]}
           rotation={Rotation.RIGHT}
-          hasAction={turnPosition !== null && turnPosition === (position + 3) % 4}
+          hasAction={
+            turnPosition !== null && turnPosition === (position + 3) % 4
+          }
           handleClickAddBotBtn={handleClickAddBotBtn}
-          handleClickPlayerEmoji={() => {}}
+          handleClickPlayerEmoji={() => {
+            return;
+          }}
           suspendPlayerClickHandlers={suspendPlayerClickHandlers}
         />
         <BoardCenter cards={cards} />
         {gameCode !== null && (
           <GameCodeContainer>
-            <div style={{ fontSize: '.5em' }}>GAME CODE</div>
+            <div style={{ fontSize: ".5em" }}>GAME CODE</div>
             <Code onClick={this.copyCodeToClip}>{gameCode}</Code>
           </GameCodeContainer>
         )}

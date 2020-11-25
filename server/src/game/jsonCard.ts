@@ -1,6 +1,6 @@
-import { Suit } from './suits';
+import { Suit } from './suits'
 
-export type JSONCard = {
-  suit: Suit;
-  value: number;
-};
+export interface JSONCard {
+  suit: Suit
+  value: number
+}

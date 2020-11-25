@@ -1,26 +1,31 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
 
-import { CardClickHandler } from '../types/cardClickHandler';
-import { Suit } from '../types/suit';
-import { Rotation } from '../types/rotation';
+import { CardClickHandler } from "../types/cardClickHandler";
+import { Suit } from "../types/suit";
+import { Rotation } from "../types/rotation";
 
 // Firefox 1.0+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const InstallTrigger: any;
-const isFirefox = typeof InstallTrigger !== 'undefined';
+const isFirefox = typeof InstallTrigger !== "undefined";
 
 const CardBody = styled.div`
-  position: ${(props: { rotation: Rotation | undefined; selected: boolean; invisible: boolean }) => {
+  position: ${(props: {
+    rotation: Rotation | undefined;
+    selected: boolean;
+    invisible: boolean;
+  }) => {
     if (props.rotation) {
-      return 'absolute';
+      return "absolute";
     }
-    return 'relative';
+    return "relative";
   }};
   height: 3.5em;
   width: 2.5em;
   color: black;
   background: white;
-  font-family: 'DM Serif Display', serif;
+  font-family: "DM Serif Display", serif;
   ${(props) => props.invisible && `opacity: 0;`}
   ${(props) =>
     !props.rotation &&
@@ -34,16 +39,16 @@ const CardBody = styled.div`
   `};
   transform: ${(props) => {
     if (props.rotation === Rotation.TOP) {
-      return 'translate(-50%, 0%) rotate(0) translate(0, -125%)';
+      return "translate(-50%, 0%) rotate(0) translate(0, -125%)";
     }
     if (props.rotation === Rotation.LEFT) {
-      return 'translate(-50%, 0%) rotate(90deg) translate(0, 25%)';
+      return "translate(-50%, 0%) rotate(90deg) translate(0, 25%)";
     }
     if (props.rotation === Rotation.RIGHT) {
-      return 'translate(-50%, 0%) rotate(90deg) translate(0, -125%)';
+      return "translate(-50%, 0%) rotate(90deg) translate(0, -125%)";
     }
     // BOTTOM
-    return 'translate(-50%, 0%) rotate(0) translate(0, 25%)';
+    return "translate(-50%, 0%) rotate(0) translate(0, 25%)";
   }};
   transform-origin: top center;
   border-radius: 0.2em;
@@ -68,7 +73,8 @@ const Value = styled.div`
 
 const SuitDiv = styled.div`
   position: absolute;
-  font-size: ${(props: { isFirefox: boolean; color: string }) => (props.isFirefox ? '1.5em' : '1.25em')};
+  font-size: ${(props: { isFirefox: boolean; color: string }) =>
+    props.isFirefox ? "1.5em" : "1.25em"};
   bottom: 0;
   right: 0;
   margin-right: 0.1em;
@@ -76,7 +82,7 @@ const SuitDiv = styled.div`
   color: ${(props) => props.color};
 `;
 
-const unicodeSuits = { Clubs: '♣', Diamonds: '♦', Hearts: '♥', Spades: '♠' };
+const unicodeSuits = { Clubs: "♣", Diamonds: "♦", Hearts: "♥", Spades: "♠" };
 
 type CardProps = {
   suit: Suit;
@@ -96,36 +102,37 @@ class Card extends Component<CardProps, CardState> {
     this.state = { selected: false };
   }
 
-  getKey() {
+  getKey(): string {
     const { value, suit } = this.props;
     return value + suit;
   }
 
   faceOf(value: number): string | number {
     if (value === 11) {
-      return 'J';
+      return "J";
     }
 
     if (value === 12) {
-      return 'Q';
+      return "Q";
     }
 
     if (value === 13) {
-      return 'K';
+      return "K";
     }
 
     if (value === 14) {
-      return 'A';
+      return "A";
     }
 
     return value;
   }
 
-  render() {
+  render(): ReactElement {
     const { value, suit, rotation, handleCardClick, invisible } = this.props;
     const { selected } = this.state;
-    const suitIcon = typeof unicodeSuits[suit] === 'undefined' ? 'X' : unicodeSuits[suit];
-    const color = ['Diamonds', 'Hearts'].includes(suit) ? 'red' : 'black';
+    const suitIcon =
+      typeof unicodeSuits[suit] === "undefined" ? "X" : unicodeSuits[suit];
+    const color = ["Diamonds", "Hearts"].includes(suit) ? "red" : "black";
 
     return (
       <CardBody

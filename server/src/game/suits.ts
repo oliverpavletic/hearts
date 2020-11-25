@@ -5,4 +5,4 @@ export enum Suit {
   SPADES = 'Spades',
 }
 
-export const SUITS: Suit[] = Object.values(Suit);
+export const SUITS: Suit[] = Object.values(Suit)

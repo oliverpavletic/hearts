@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { Button, ButtonGroup, Form } from 'react-bootstrap';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
+import { Button, ButtonGroup, Form } from "react-bootstrap";
 
-import { SocketEvent } from '../types/socketEvent';
+import { SocketEvent } from "../types/socketEvent";
 
 const Title = styled.div`
-  font-family: 'Baloo Tamma 2', cursive;
+  font-family: "Baloo Tamma 2", cursive;
   font-size: 5em;
   color: whitesmoke;
   padding-top: 0.5em;
@@ -21,8 +21,8 @@ const Container = styled.div`
 `;
 
 enum FormToggled {
-  JOIN = 'JOIN',
-  CREATE = 'CREATE',
+  JOIN = "JOIN",
+  CREATE = "CREATE",
 }
 
 type LandingPageProps = {
@@ -42,38 +42,43 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
     this.state = { formToggled: FormToggled.CREATE, gameCodeIsValid: null };
   }
 
-  onToggle() {
+  onToggle(): void {
     const { formToggled } = this.state;
-    const nextToggle: FormToggled = formToggled === FormToggled.JOIN ? FormToggled.CREATE : FormToggled.JOIN;
+    const nextToggle: FormToggled =
+      formToggled === FormToggled.JOIN ? FormToggled.CREATE : FormToggled.JOIN;
 
     this.setState({ formToggled: nextToggle });
   }
 
-  handleSubmit() {
+  handleSubmit(): void {
     const { socket } = this.props;
     const { formToggled } = this.state;
-    const playerNameNode = document.getElementById('playerName') as HTMLInputElement;
+    const playerNameNode = document.getElementById(
+      "playerName"
+    ) as HTMLInputElement;
 
-    if (typeof playerNameNode === 'undefined') {
-      alert('Error submitting form. Try refreshing the page.');
+    if (typeof playerNameNode === "undefined") {
+      alert("Error submitting form. Try refreshing the page.");
       return;
     }
 
-    const playerName = playerNameNode!.value;
+    const playerName = playerNameNode.value;
 
     socket.on(SocketEvent.SERVER_INVALID_GAME_CODE, () => {
       this.setState({ gameCodeIsValid: false });
     });
 
     if (formToggled === FormToggled.JOIN) {
-      const gameCodeNode = document.getElementById('gameCode') as HTMLInputElement;
+      const gameCodeNode = document.getElementById(
+        "gameCode"
+      ) as HTMLInputElement;
 
-      if (typeof gameCodeNode === 'undefined') {
-        alert('Error submitting form. Try refreshing the page.');
+      if (typeof gameCodeNode === "undefined") {
+        alert("Error submitting form. Try refreshing the page.");
         return;
       }
 
-      const gameCode = gameCodeNode!.value;
+      const gameCode = gameCodeNode.value;
       socket.emit(SocketEvent.CLIENT_JOIN_GAME, {
         playerName,
         gameCode,
@@ -85,11 +90,11 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
     }
   }
 
-  render() {
+  render(): ReactElement {
     const titleText = (
       <span>
         HE
-        <span style={{ fontSize: '.75em' }}>♡</span>
+        <span style={{ fontSize: ".75em" }}>♡</span>
         RTS
       </span>
     );
@@ -100,19 +105,26 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
       <>
         <Title>{titleText}</Title>
         <Container>
-          <ButtonGroup aria-label="Basic example" style={{ paddingBottom: '1em', width: '100%' }}>
+          <ButtonGroup
+            aria-label="Basic example"
+            style={{ paddingBottom: "1em", width: "100%" }}
+          >
             <Button
               variant="outline-light"
-              style={{ boxShadow: 'none' }}
-              className={formToggled === FormToggled.JOIN ? 'active' : undefined}
+              style={{ boxShadow: "none" }}
+              className={
+                formToggled === FormToggled.JOIN ? "active" : undefined
+              }
               onClick={this.onToggle}
             >
               Join Game
             </Button>
             <Button
               variant="outline-light"
-              style={{ boxShadow: 'none' }}
-              className={formToggled === FormToggled.CREATE ? 'active' : undefined}
+              style={{ boxShadow: "none" }}
+              className={
+                formToggled === FormToggled.CREATE ? "active" : undefined
+              }
               onClick={this.onToggle}
             >
               Create Game
@@ -126,7 +138,7 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
                   size="lg"
                   type="text"
                   placeholder="Enter game code"
-                  style={{ textAlign: 'center' }}
+                  style={{ textAlign: "center" }}
                   // isValid={typeof gameCodeIsValid !== null && gameCodeIsValid}
                   isInvalid={gameCodeIsValid !== null && !gameCodeIsValid}
                 />
@@ -138,13 +150,17 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
                 size="lg"
                 type="text"
                 placeholder="Enter player name"
-                style={{ textAlign: 'center' }}
+                style={{ textAlign: "center" }}
                 // isValid={typeof nameIsValid !== 'undefined' && nameIsValid}
                 // isInvalid={typeof nameIsValid !== 'undefined' && !nameIsValid}
               />
             </Form.Group>
-            <Button variant="primary" style={{ width: '100%' }} onClick={this.handleSubmit}>
-              {formToggled === FormToggled.JOIN ? 'Join Game' : 'Create Game'}
+            <Button
+              variant="primary"
+              style={{ width: "100%" }}
+              onClick={this.handleSubmit}
+            >
+              {formToggled === FormToggled.JOIN ? "Join Game" : "Create Game"}
             </Button>
           </Form>
         </Container>

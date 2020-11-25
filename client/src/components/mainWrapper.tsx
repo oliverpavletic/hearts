@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
 
-import { JoinInfo } from '../types/joinInfo';
-import { SocketEvent } from '../types/socketEvent';
-import Game from './game';
-import LandingPage from './landingPage';
+import { JoinInfo } from "../types/joinInfo";
+import { SocketEvent } from "../types/socketEvent";
+import Game from "./game";
+import LandingPage from "./landingPage";
 
 const Background = styled.div`
   text-align: center;
@@ -27,8 +27,8 @@ class MainWrapper extends Component<MainWrapperProps, MainWrapperState> {
     };
   }
 
-  componentDidMount() {
-    let { socket } = this.props;
+  componentDidMount(): void {
+    const { socket } = this.props;
 
     socket.on(SocketEvent.SERVER_SENT_JOIN_INFO, (joinInfo: JoinInfo) => {
       if (this.state.joinInfo === null) {
@@ -37,11 +37,11 @@ class MainWrapper extends Component<MainWrapperProps, MainWrapperState> {
     });
   }
 
-  handleLeaveGame() {
+  handleLeaveGame(): void {
     this.setState({ joinInfo: null });
   }
 
-  render() {
+  render(): ReactElement {
     const { joinInfo } = this.state;
     const { socket } = this.props;
 

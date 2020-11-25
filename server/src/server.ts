@@ -1,130 +1,161 @@
-import express from 'express';
-import http from 'http';
-import socket_io from 'socket.io';
-import cookie from 'cookie';
-import cookieParser from 'cookie-parser';
-const uuid = require('uuid');
+import express from 'express'
+import http from 'http'
+import socket_io from 'socket.io'
+import cookie from 'cookie'
+import cookieParser from 'cookie-parser'
 
-import { GameManager } from './game/gameManager';
-import { SocketEvent } from './socketEvent';
-import { EmojiData } from 'emoji-mart';
+import { GameManager } from './game/gameManager'
+import { SocketEvent } from './socketEvent'
+import { JSONCard } from './game/jsonCard'
 
-const app = express();
-const server = new http.Server(app);
-const io = socket_io(server, { cookie: false });
-const PORT = 4000;
-const secret = 'applesNoranges';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const uuid = require('uuid')
+const app = express()
+const server = new http.Server(app)
+const io = socket_io(server, { cookie: false })
+const PORT = 4000
+const secret = 'applesNoranges'
 const cookieOptions: express.CookieOptions = {
   maxAge: 1000 * 60 * 15, // 15 minutes
   httpOnly: true,
-  signed: true,
-};
+  signed: true
+}
 
-const gameManager = new GameManager();
+const gameManager = new GameManager()
 
 // ****************************************
 // *********** Express Routes  ************
 // ****************************************
 
-app.use(express.json());
-app.use(cookieParser(secret));
+app.use(express.json())
+app.use(cookieParser(secret))
 
-let logRequest = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.log(`${req.method} ${req.originalUrl}`);
-  next();
-};
+const logRequest = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  console.log(`${req.method} ${req.originalUrl}`)
+  next()
+}
 
-app.use(logRequest);
+app.use(logRequest)
 
 app.get('/connect', (req: express.Request, res: express.Response) => {
-  let joinInfo = {};
+  let joinInfo = {}
   if (typeof req.signedCookies !== 'undefined' && 'userId' in req.signedCookies) {
-    let userId = req.signedCookies['userId'];
-    joinInfo = gameManager.getJoinInfoForUserId(userId);
+    const userId = req.signedCookies.userId
+    joinInfo = gameManager.getJoinInfoForUserId(userId)
   } else {
     if (typeof req.signedCookies === 'undefined') {
-      req.signedCookies = {};
+      req.signedCookies = {}
     } else {
-      console.log(req.signedCookies);
+      console.log(req.signedCookies)
     }
-    let value = uuid.v4();
-    req.signedCookies['userId'] = value;
-    res.cookie('userId', value, cookieOptions);
-    console.log(`Gave cookie userId=${value}`);
+    const value = uuid.v4()
+    req.signedCookies.userId = value
+    res.cookie('userId', value, cookieOptions)
+    console.log('Gave cookie userId: ', value)
   }
-  res.json(joinInfo);
-});
+  res.json(joinInfo)
+})
 
 app.get('/gameState', (req: express.Request, res: express.Response) => {
-  let userId = req.signedCookies['userId'];
-  let gameState = gameManager.getGameState(userId);
+  const userId = req.signedCookies.userId
+  const gameState = gameManager.getGameState(userId)
 
-  res.json(gameState);
-});
+  res.json(gameState)
+})
 
 io.on('connection', (socket: SocketIO.Socket) => {
-  let userId: string;
-  let cookieStr: string | false;
-  const rawCookie = socket.handshake.headers.cookie;
+  let userId: string
+  const rawCookie = socket.handshake.headers.cookie
 
-  cookieStr = cookieParser.signedCookie(rawCookie, secret);
-  if (!cookieStr) {
-    throw new Error('No cookie!');
+  const cookieStr = cookieParser.signedCookie(rawCookie, secret)
+  if (cookieStr === false) {
+    socket.emit(SocketEvent.SERVER_RELOAD_CONNECTION, {})
+    return
   }
-  userId = cookie.parse(cookieStr).userId;
-  userId = userId.split(':')[1];
-  userId = userId.split('.')[0];
+  userId = cookie.parse(cookieStr).userId
+  userId = userId.split(':')[1]
+  userId = userId.split('.')[0]
 
-  console.log(`CONNECTED: ${userId}`);
+  console.log('connection: ', userId)
 
   if (gameManager.hasGameForUserId(userId)) {
-    gameManager.updateSocketForPlayer(userId, socket);
+    gameManager.updateSocketForPlayer(userId, socket)
   }
 
-  socket.on(SocketEvent.CLIENT_CREATE_GAME, (body: { playerName: string }) => {
-    let playerName = body.playerName;
-    let joinInfo = gameManager.createGame(playerName, userId, socket).toJSON();
-
-    socket.emit(SocketEvent.SERVER_SENT_JOIN_INFO, joinInfo);
-  });
-
-  socket.on(SocketEvent.CLIENT_JOIN_GAME, (body: { gameCode: string; playerName: string }) => {
-    let playerName = body.playerName;
-    let gameCode = body.gameCode;
+  socket.on(SocketEvent.CLIENT_CREATE_GAME, (payload: { playerName: string }) => {
     try {
-      let joinInfo = gameManager.joinGame(playerName, gameCode, userId, socket).toJSON();
-      socket.emit(SocketEvent.SERVER_SENT_JOIN_INFO, joinInfo);
+      console.log('CLIENT_CREATE_GAME', payload)
+      const playerName = payload.playerName
+      const joinInfo = gameManager.createGame(playerName, userId, socket).toJSON()
+
+      socket.emit(SocketEvent.SERVER_SENT_JOIN_INFO, joinInfo)
     } catch (e) {
-      console.log(e);
-      socket.emit(SocketEvent.SERVER_INVALID_GAME_CODE, {});
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_ERROR, {})
     }
-  });
+  })
+
+  socket.on(SocketEvent.CLIENT_JOIN_GAME, (payload: { gameCode: string, playerName: string }) => {
+    const playerName = payload.playerName
+    const gameCode = payload.gameCode
+    try {
+      console.log('CLIENT_JOIN_GAME', payload)
+      const joinInfo = gameManager.joinGame(playerName, gameCode).toJSON()
+      socket.emit(SocketEvent.SERVER_SENT_JOIN_INFO, joinInfo)
+    } catch (e) {
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_INVALID_GAME_CODE, {})
+    }
+  })
 
   socket.on(SocketEvent.CLIENT_ADD_BOT, () => {
-    gameManager.addBot(userId);
-  });
+    try {
+      console.log('CLIENT_ADD_BOT')
+      gameManager.addBot(userId)
+    } catch (e) {
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_ERROR, {})
+    }
+  })
 
   socket.on(SocketEvent.CLIENT_SELECT_EMOJI, (payload: { emoji: string }) => {
-    gameManager.setEmoji(userId, payload.emoji);
-  });
+    try {
+      console.log('CLIENT_SELECT_EMOJI', payload)
+      gameManager.setEmoji(userId, payload.emoji)
+    } catch (e) {
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_ERROR, {})
+    }
+  })
 
-  socket.on(SocketEvent.CLIENT_PLAY_CARD, (payload: any) => {
-    gameManager.playCard(userId, payload.card);
-  });
+  socket.on(SocketEvent.CLIENT_PLAY_CARD, (payload: { card: JSONCard }) => {
+    try {
+      console.log('CLIENT_PLAY_CARD', payload)
+      gameManager.playCard(userId, payload.card)
+    } catch (e) {
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_ERROR, {})
+    }
+  })
 
   socket.on(SocketEvent.CLIENT_LEAVE_GAME, () => {
-    gameManager.removePlayer(userId);
-  });
+    try {
+      console.log('CLIENT_LEAVE_GAME')
+      gameManager.removePlayer(userId)
+    } catch (e) {
+      console.log('Error:', e)
+      socket.emit(SocketEvent.SERVER_ERROR, {})
+    }
+  })
 
   socket.on('disconnect', () => {
-    console.log(`DISCONNECTED: ${userId}`);
-    // TODO remove player from game, handle incomplete game
+    console.log(`DISCONNECTED: ${userId}`)
     if (gameManager.hasGameForUserId(userId)) {
-      gameManager.removeSocketForPlayer(userId);
+      gameManager.removeSocketForPlayer(userId)
     }
-  });
-});
+  })
+})
 
 server.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
+  console.log(`Listening on ${PORT}`)
+})

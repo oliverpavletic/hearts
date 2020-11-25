@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
 
-import { BoxArrowLeft } from './icons/boxArrowLeft';
-import { JournalText } from './icons/journalText';
+import { BoxArrowLeft } from "./icons/boxArrowLeft";
+import { JournalText } from "./icons/journalText";
 // import { PatchQuestion } from './icons/patchQuestion';
-import { COLOR_LIGHT_NAVY } from '../colors';
+import { COLOR_LIGHT_NAVY } from "../colors";
 
 const Wrapper = styled.div`
   top: 0.35em;
-  left: ${(props: { left: number; toggled: boolean; frozen: boolean }) => props.left}em;
+  left: ${(props: { left: number; toggled: boolean; frozen: boolean }) =>
+    props.left}em;
   position: absolute;
   height: 1.75em;
   width: 1.75em;
@@ -47,8 +48,8 @@ type ButtonRackProps = {
   // handleClickRulesBtn: () => void;
 };
 
-class ButtonRack extends Component<ButtonRackProps, {}> {
-  render() {
+class ButtonRack extends Component<ButtonRackProps, Record<string, never>> {
+  render(): ReactElement {
     const {
       handleClickLeaveBtn,
       leaveBtnToggled,
@@ -64,7 +65,9 @@ class ButtonRack extends Component<ButtonRackProps, {}> {
           left={0.35}
           toggled={leaveBtnToggled}
           frozen={scoreboardBtnToggled}
-          onClick={suspendLeaveBtnClickHandler ? undefined : handleClickLeaveBtn}
+          onClick={
+            suspendLeaveBtnClickHandler ? undefined : handleClickLeaveBtn
+          }
         >
           <InnerWrapper>{BoxArrowLeft}</InnerWrapper>
         </Wrapper>
@@ -72,7 +75,11 @@ class ButtonRack extends Component<ButtonRackProps, {}> {
           left={2.45}
           toggled={scoreboardBtnToggled}
           frozen={leaveBtnToggled}
-          onClick={suspendScoreboardBtnClickHandler ? undefined : handleClickScoreboardBtn}
+          onClick={
+            suspendScoreboardBtnClickHandler
+              ? undefined
+              : handleClickScoreboardBtn
+          }
         >
           <InnerWrapper>{JournalText}</InnerWrapper>
         </Wrapper>

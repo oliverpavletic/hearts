@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { Button } from 'react-bootstrap';
-import OutsideClickHandler from 'react-outside-click-handler';
+import React, { Component, ReactElement } from "react";
+import styled from "styled-components";
+import { Button } from "react-bootstrap";
+import OutsideClickHandler from "react-outside-click-handler";
 
-import { COLOR_LIGHTEST_GREY } from '../colors';
+import { COLOR_LIGHTEST_GREY } from "../colors";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: 'Baloo Tamma 2', cursive;
+  font-family: "Baloo Tamma 2", cursive;
   padding: 10px;
   font-size: 20px;
 `;
@@ -32,9 +32,13 @@ type LeaveGameProps = {
   handleClickLeave: () => void;
 };
 
-class LeaveGame extends Component<LeaveGameProps, {}> {
-  render() {
-    const { handleOutsideClick, handleClickStay, handleClickLeave } = this.props;
+class LeaveGame extends Component<LeaveGameProps, Record<string, never>> {
+  render(): ReactElement {
+    const {
+      handleOutsideClick,
+      handleClickStay,
+      handleClickLeave,
+    } = this.props;
     return (
       <OutsideClickHandler onOutsideClick={handleOutsideClick}>
         <Wrapper>

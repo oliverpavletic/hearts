@@ -1,140 +1,150 @@
-import { strict as assert } from 'assert';
+import { strict as assert } from 'assert'
 
-import { Game } from './game';
-import { GameState } from './gameState';
-import { GameCodeGenerator } from './gameCodeGenerator';
-import { JoinInfo } from './joinInfo';
-import { JSONCard } from './jsonCard';
-import { Card } from './card';
-import { EmojiData } from 'emoji-mart';
+import { Game } from './game'
+import { GameState } from './gameState'
+import { GameCodeGenerator } from './gameCodeGenerator'
+import { JoinInfo } from './joinInfo'
+import { JSONCard } from './jsonCard'
+import { Card } from './card'
 
 export class GameManager {
-  private games: Map<string, Game>;
-  private userIdToGameCode: Map<string, string>;
-  private gameCodeGenerator: GameCodeGenerator;
+  private readonly games: Map<string, Game>
+  private readonly userIdToGameCode: Map<string, string>
+  private readonly gameCodeGenerator: GameCodeGenerator
 
-  constructor() {
-    this.games = new Map<string, Game>();
-    this.userIdToGameCode = new Map<string, string>();
-    this.gameCodeGenerator = new GameCodeGenerator(3, 3);
+  constructor () {
+    this.games = new Map<string, Game>()
+    this.userIdToGameCode = new Map<string, string>()
+    this.gameCodeGenerator = new GameCodeGenerator(3, 3)
   }
 
-  public createGame(playerName: string, userId: string, socket: SocketIO.Socket): JoinInfo {
-    let gameCode = this.gameCodeGenerator.nextGameCode();
-    let game = new Game();
-    let position: number;
+  public createGame (
+    playerName: string,
+    userId: string,
+    socket: SocketIO.Socket
+  ): JoinInfo {
+    const gameCode = this.gameCodeGenerator.nextGameCode()
+    const game = new Game()
 
-    assert(!this.games.has(gameCode));
+    assert(!this.games.has(gameCode))
 
-    game.addOnlinePlayer(playerName, userId, socket);
-    position = game.getPlayerPosition(userId);
-    this.userIdToGameCode.set(userId, gameCode);
-    this.games.set(gameCode, game);
+    game.addOnlinePlayer(playerName, userId, socket)
+    const position = game.getPlayerPosition(userId)
+    this.userIdToGameCode.set(userId, gameCode)
+    this.games.set(gameCode, game)
 
-    return new JoinInfo(gameCode, position);
+    return new JoinInfo(gameCode, position)
   }
 
-  public joinGame(playerName: string, gameCode: string, userId: string, socket: SocketIO.Socket): JoinInfo {
+  public joinGame (gameCode: string, userId: string): JoinInfo {
     if (!this.games.has(gameCode)) {
-      throw new Error(`There is no game with gameCode=${gameCode}`);
+      throw new Error(`There is no game with gameCode=${gameCode}`)
     }
 
-    let game = this.games.get(gameCode);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const game = this.games.get(gameCode)!
 
-    this.userIdToGameCode.set(userId, gameCode);
+    this.userIdToGameCode.set(userId, gameCode)
 
-    let position = game!.getPlayerPosition(userId);
+    const position = game.getPlayerPosition(userId)
 
-    return new JoinInfo(gameCode, position);
+    return new JoinInfo(gameCode, position)
   }
 
-  public getJoinInfoForUserId(userId: string) {
+  public getJoinInfoForUserId (
+    userId: string
+  ): JoinInfo | Record<string, never> {
     if (!this.hasGameForUserId(userId)) {
-      return {};
+      return {}
     }
 
-    let gameCode = this.userIdToGameCode.get(userId)!;
-    let game = this.games.get(gameCode);
-    let position = game!.getPlayerPosition(userId);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const gameCode = this.userIdToGameCode.get(userId)!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const game = this.games.get(gameCode)!
+    const position = game.getPlayerPosition(userId)
 
-    return new JoinInfo(gameCode, position);
+    return new JoinInfo(gameCode, position)
   }
 
-  public addBot(userId: string) {
-    let game = this.getGameFromUserId(userId);
-
-    game.addBot();
+  public addBot (userId: string): void {
+    const game = this.getGameFromUserId(userId)
+    game.addBot()
   }
 
-  public playCard(userId: string, card: JSONCard): void {
-    let game = this.getGameFromUserId(userId);
-    game.playCard(userId, new Card(card.value, card.suit));
+  public playCard (userId: string, card: JSONCard): void {
+    const game = this.getGameFromUserId(userId)
+    game.playCard(userId, new Card(card.value, card.suit))
   }
 
-  public setEmoji(userId: string, emoji: string) {
-    let game = this.getGameFromUserId(userId);
-    game.setEmoji(userId, emoji);
+  public setEmoji (userId: string, emoji: string): void {
+    const game = this.getGameFromUserId(userId)
+    game.setEmoji(userId, emoji)
   }
 
-  public getGameState(userId: string): GameState | {} {
+  public getGameState (userId: string): GameState | Record<string, never> {
     if (!this.hasGameForUserId(userId)) {
-      return {};
+      return {}
     }
 
-    let game = this.getGameFromUserId(userId);
-    return game.getGameState(userId);
+    const game = this.getGameFromUserId(userId)
+    return game.getGameState(userId)
   }
 
-  public hasGameForUserId(userId: string) {
+  public hasGameForUserId (userId: string): boolean {
     if (this.userIdToGameCode.has(userId)) {
-      assert(this.games.has(this.userIdToGameCode.get(userId)!));
-      return true;
+      const gameCode = this.userIdToGameCode.get(userId)
+      assert(gameCode)
+      assert(this.games.has(gameCode))
+      return true
     }
 
-    return false;
+    return false
   }
 
-  public updateSocketForPlayer(userId: string, socket: SocketIO.Socket) {
+  public updateSocketForPlayer (userId: string, socket: SocketIO.Socket): void {
     if (!this.hasGameForUserId(userId)) {
-      throw new Error('Cannot updateSocketForPlayer with no game for userId');
+      throw new Error('Cannot updateSocketForPlayer with no game for userId')
     }
 
-    let game = this.getGameFromUserId(userId);
-    game.updateSocketForPlayer(userId, socket);
+    const game = this.getGameFromUserId(userId)
+    game.updateSocketForPlayer(userId, socket)
   }
 
-  public removeSocketForPlayer(userId: string) {
+  public removeSocketForPlayer (userId: string): void {
     if (!this.hasGameForUserId(userId)) {
-      throw new Error('Cannot updateSocketForPlayer with no game for userId');
+      throw new Error('Cannot updateSocketForPlayer with no game for userId')
     }
 
-    let game = this.getGameFromUserId(userId);
-    game.updateSocketForPlayer(userId, null);
+    const game = this.getGameFromUserId(userId)
+    game.updateSocketForPlayer(userId, null)
   }
 
-  public removePlayer(userId: string) {
+  public removePlayer (userId: string): void {
     if (!this.hasGameForUserId(userId)) {
-      throw new Error('Cannot updateSocketForPlayer with no game for userId');
+      throw new Error('Cannot updateSocketForPlayer with no game for userId')
     }
 
-    let game = this.getGameFromUserId(userId);
-    game.removePlayer(userId);
+    const game = this.getGameFromUserId(userId)
+    game.removePlayer(userId)
 
-    this.userIdToGameCode.delete(userId);
-    assert(!this.hasGameForUserId(userId));
+    this.userIdToGameCode.delete(userId)
+    assert(!this.hasGameForUserId(userId))
   }
 
-  private getGameFromUserId(userId: string): Game {
+  private getGameFromUserId (userId: string): Game {
     if (!this.userIdToGameCode.has(userId)) {
-      throw new Error(`There is no game associated with userId=${userId}`);
+      throw new Error(`There is no game associated with userId=${userId}`)
     }
 
-    let gameCode = this.userIdToGameCode.get(userId);
+    const gameCode = this.userIdToGameCode.get(userId)
+    assert(gameCode)
     assert(
-      this.games.has(gameCode!),
+      this.games.has(gameCode),
       `There should be a game for every userId in userIdToGameCode but not found for userId=${userId}`
-    );
+    )
 
-    return this.games.get(gameCode!)!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.games.get(gameCode)!
   }
 }

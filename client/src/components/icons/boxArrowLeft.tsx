@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // https://icons.getbootstrap.com/icons/box-arrow-left/
 
@@ -8,7 +8,13 @@ export const BoxArrowLeft = (
     viewBox="0 0 16 16"
     className="bi bi-box-arrow-left"
     fill="currentColor"
-    style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%' }}
+    style={{
+      position: "absolute",
+      left: 0,
+      top: 0,
+      height: "100%",
+      width: "100%",
+    }}
   >
     <path
       fill-rule="evenodd"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // https://icons.getbootstrap.com/icons/patch-question/
 
@@ -8,7 +8,13 @@ export const PatchQuestion = (
     viewBox="0 0 16 16"
     className="bi bi-patch-question"
     fill="currentColor"
-    style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%' }}
+    style={{
+      position: "absolute",
+      left: 0,
+      top: 0,
+      height: "100%",
+      width: "100%",
+    }}
   >
     <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM8.05 9.6c.336 0 .504-.24.554-.627.04-.534.198-.815.847-1.26.673-.475 1.049-1.09 1.049-1.986 0-1.325-.92-2.227-2.262-2.227-1.02 0-1.792.492-2.1 1.29A1.71 1.71 0 0 0 6 5.48c0 .393.203.64.545.64.272 0 .455-.147.564-.51.158-.592.525-.915 1.074-.915.61 0 1.03.446 1.03 1.084 0 .563-.208.885-.822 1.325-.619.433-.926.914-.926 1.64v.111c0 .428.208.745.585.745z" />
     <path
