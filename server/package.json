@@ -8,8 +8,7 @@
     "prestart": "npm run tsc && npm link typescript && npm test",
     "start": "node ./build/src/server.js",
     "pretest": "npx eslint . --fix",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
-    "heroku-postbuild": "cd ../client && npm install && npm run build"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'"
   },
   "author": "Oliver Pavletic",
   "license": "MIT",
