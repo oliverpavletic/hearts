@@ -16,6 +16,7 @@ import { ScorecardData } from "../types/scorecardData";
 import LeaveGame from "./leaveGame";
 import EmojiPicker from "./emojiPicker";
 import { ServerGameState } from "../types/gameState";
+import { getBaseURL } from "../connectionConfig";
 
 const GAME_HEIGHT = 500;
 const GAME_WIDTH = 700;
@@ -87,11 +88,14 @@ class Game extends Component<GameProps, GameState> {
 
   componentDidMount(): void {
     const { socket } = this.props;
+    const baseURL = getBaseURL();
 
-    fetch("/gameState")
+    fetch(baseURL + "/gameState")
       .then((res) => res.json())
       .then((serverGameState) => {
+        console.log(serverGameState);
         if ("boardCards" in serverGameState) {
+          console.log('yes');
           this.setGameStateFromJSON(serverGameState);
         }
       });

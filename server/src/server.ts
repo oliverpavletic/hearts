@@ -67,7 +67,7 @@ io.on('connection', (socket: SocketIO.Socket) => {
   let userId: string
   const rawCookie = socket.handshake.headers.cookie
 
-  const cookieStr = cookieParser.signedCookie(rawCookie, secret)
+  const cookieStr = typeof rawCookie !== 'undefined' ? cookieParser.signedCookie(rawCookie, secret) : false
   if (cookieStr === false) {
     socket.emit(SocketEvent.SERVER_RELOAD_CONNECTION, {})
     return
@@ -156,6 +156,15 @@ io.on('connection', (socket: SocketIO.Socket) => {
   })
 })
 
-server.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`)
+const dynamicPort = process.env.PORT
+let port: string | number
+
+if (typeof dynamicPort !== 'undefined') {
+  port = dynamicPort
+} else {
+  port = PORT
+}
+
+server.listen(port, () => {
+  console.log('Listening on port: ', port)
 })

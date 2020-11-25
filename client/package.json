@@ -1,5 +1,6 @@
 {
   "name": "hearts-client",
+  "homepage": "https://oliverpavletic.github.io",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,6 +20,7 @@
     "emoji-mart": "^3.0.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "gh-pages": "^3.1.0",
     "prettier": "^2.2.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
@@ -27,10 +29,12 @@
     "react-scripts": "3.4.4",
     "socket.io-client": "^2.3.1",
     "styled-components": "^5.2.0",
-    "typescript": "3.8"
+    "typescript": "^3.8.3"
   },
-  "proxy": "http://localhost:4000",
+  "proxy": "https://localhost:4000",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b main -d build",
     "prestart": "npx eslint . --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
