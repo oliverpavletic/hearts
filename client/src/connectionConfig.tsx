@@ -1,5 +1,5 @@
-const DEV_BASE_URL = "http://localhost:4000";
-const PROD_BASE_URL = "https://sheltered-atoll-15915.herokuapp.com";
+const DEV_BASE_URL = "";
+const PROD_BASE_URL = "";
 
 export const getBaseURL = () => {
   let baseURL: string;
