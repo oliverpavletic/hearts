@@ -9,7 +9,6 @@
     "build-client": "cd client && npm install && npm run build && mkdir -p ../server/build/client && cp -r ./build ../server/build/client && cp -r ./public ../server/build/client",
     "build-server": "cd server && npm install && npm run build",
     "build": "npm run build-client && npm run build-server",
-    "prestart": "npm run build",
     "start": "cd server && npm run start-skip-build"
   },
   "repository": {
