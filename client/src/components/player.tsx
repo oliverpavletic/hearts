@@ -5,7 +5,7 @@ import { PlayerInfo } from "../types/playerInfo";
 import { Rotation } from "../types/rotation";
 import {
   COLOR_DIMMED_DISCONNECTED,
-  COLOR_DIMMED_DISCONNECTED_HOVER,
+  COLOR_LIGHTER_NAVY,
   COLOR_LIGHT_NAVY,
   COLOR_GOLDEN_SHADOW,
 } from "../colors";
@@ -23,20 +23,21 @@ const Container = styled.div`
     isEmpty: boolean;
     hasAction: boolean;
     dimmed: boolean;
-    hoverable: boolean;
   }) => {
     if (props.dimmed) {
       return COLOR_DIMMED_DISCONNECTED;
     }
+    if (props.isEmpty) {
+      return COLOR_LIGHTER_NAVY;
+    }
     return COLOR_LIGHT_NAVY;
   }};
   ${(props) => {
-    if (props.hoverable) {
+    if (props.isEmpty) {
       return `
         &:hover {
           cursor: pointer;
-          background: ${COLOR_DIMMED_DISCONNECTED_HOVER};
-          color: grey;
+          background: ${COLOR_LIGHT_NAVY};
         };
       `;
     }
@@ -168,8 +169,7 @@ function Player(props: PlayerProps): ReactElement {
       rotation={rotation}
       isEmpty={info === null}
       hasAction={hasAction}
-      dimmed={info === null || !info.isConnected}
-      hoverable={info === null}
+      dimmed={info !== null && !info.isConnected}
       onClick={
         info === null && !suspendPlayerClickHandlers
           ? handleClickAddBotBtn

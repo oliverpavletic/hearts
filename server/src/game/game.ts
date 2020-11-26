@@ -67,6 +67,8 @@ export class Game {
     if (this.numPlayers(true) === 1) {
       this.hostPosition = position
     }
+
+    this.sendUpdatedStateToOnlinePlayers()
   }
 
   private addPlayer (player: Player, isASwap = false): void {
