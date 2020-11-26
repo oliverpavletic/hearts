@@ -16,7 +16,6 @@ function App(): ReactElement {
     fetch(baseURL + "/connect", {
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
       .then((res) => res.json())

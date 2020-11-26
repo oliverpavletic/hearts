@@ -17,6 +17,7 @@ import LeaveGame from "./leaveGame";
 import EmojiPicker from "./emojiPicker";
 import { ServerGameState } from "../types/gameState";
 import { getBaseURL } from "../connectionConfig";
+import { Emoji } from "emoji-mart";
 
 const GAME_HEIGHT = 500;
 const GAME_WIDTH = 700;
@@ -99,6 +100,17 @@ class Game extends Component<GameProps, GameState> {
           this.setGameStateFromJSON(serverGameState);
         }
       });
+
+    if (
+      typeof Emoji.defaultProps !== "undefined" &&
+      typeof Emoji.defaultProps.backgroundImageFn !== "undefined"
+    ) {
+      Emoji.defaultProps.backgroundImageFn("apple", 64);
+    }
+
+    if (window.innerHeight > window.innerWidth) {
+      alert("Hearts is best enjoyed in landscape mode 🔄");
+    }
 
     socket.on(
       SocketEvent.SERVER_UPDATED_GAME_STATE,
@@ -356,16 +368,20 @@ class Game extends Component<GameProps, GameState> {
                 true
               )}
             />
+            <ButtonRack
+              handleClickLeaveBtn={this.handleClickLeaveBtn.bind(this)}
+              leaveBtnToggled={showLeaveGame}
+              suspendLeaveBtnClickHandler={suspendLeaveBtnClickHandler}
+              handleClickScoreboardBtn={this.handleClickScoreboardBtn.bind(
+                this
+              )}
+              scoreboardBtnToggled={showScoreboard}
+              suspendScoreboardBtnClickHandler={
+                suspendScoreboardBtnClickHandler
+              }
+            />
           </>
         )}
-        <ButtonRack
-          handleClickLeaveBtn={this.handleClickLeaveBtn.bind(this)}
-          leaveBtnToggled={showLeaveGame}
-          suspendLeaveBtnClickHandler={suspendLeaveBtnClickHandler}
-          handleClickScoreboardBtn={this.handleClickScoreboardBtn.bind(this)}
-          scoreboardBtnToggled={showScoreboard}
-          suspendScoreboardBtnClickHandler={suspendScoreboardBtnClickHandler}
-        />
         {showScoreboard && (
           <Scorecard
             scorecardData={scorecardData}
