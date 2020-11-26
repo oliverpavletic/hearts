@@ -11,11 +11,24 @@ type EmojiPickerProps = {
     emoji: EmojiData,
     event: React.MouseEvent<Element, MouseEvent>
   ) => void;
+  emojiSheet: string | null;
 };
 
 class EmojiPicker extends Component<EmojiPickerProps, Record<string, never>> {
   render(): ReactElement {
-    const { handleOutsideClick, handleClickPickerEmoji } = this.props;
+    const {
+      handleOutsideClick,
+      handleClickPickerEmoji,
+      emojiSheet,
+    } = this.props;
+
+    let backgroundImageFn = undefined;
+
+    if (emojiSheet !== null) {
+      backgroundImageFn = (_: string, __: number) => {
+        return emojiSheet;
+      };
+    }
 
     return (
       <OutsideClickHandler onOutsideClick={handleOutsideClick}>
@@ -28,6 +41,7 @@ class EmojiPicker extends Component<EmojiPickerProps, Record<string, never>> {
             transform: "translate(-50%, -50%) scale(.75)",
           }}
           onClick={handleClickPickerEmoji}
+          backgroundImageFn={backgroundImageFn}
         />
       </OutsideClickHandler>
     );

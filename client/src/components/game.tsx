@@ -59,6 +59,7 @@ type GameState = {
   suspendLeaveBtnClickHandler: boolean;
   showPicker: boolean;
   suspendPlayerClickHandlers: boolean;
+  emojiSheet: string | null;
 };
 
 class Game extends Component<GameProps, GameState> {
@@ -84,6 +85,7 @@ class Game extends Component<GameProps, GameState> {
       suspendLeaveBtnClickHandler: false,
       showPicker: false,
       suspendPlayerClickHandlers: false,
+      emojiSheet: null,
     };
   }
 
@@ -94,9 +96,7 @@ class Game extends Component<GameProps, GameState> {
     fetch(baseURL + "/gameState")
       .then((res) => res.json())
       .then((serverGameState) => {
-        console.log(serverGameState);
         if ("boardCards" in serverGameState) {
-          console.log("yes");
           this.setGameStateFromJSON(serverGameState);
         }
       });
@@ -105,11 +105,19 @@ class Game extends Component<GameProps, GameState> {
       typeof Emoji.defaultProps !== "undefined" &&
       typeof Emoji.defaultProps.backgroundImageFn !== "undefined"
     ) {
-      Emoji.defaultProps.backgroundImageFn("apple", 64);
+      const emojiSheetURL = Emoji.defaultProps.backgroundImageFn("apple", 64);
+      fetch(emojiSheetURL)
+        .then((res) => res.blob())
+        .then((data) => {
+          const emojiSheet = URL.createObjectURL(data);
+          this.setState({ emojiSheet });
+        });
     }
 
     if (window.innerHeight > window.innerWidth) {
-      alert("Hearts is best enjoyed in landscape mode 🔄");
+      alert(
+        " 🏞️ Hearts is best enjoyed in landscape mode. 🏞️ \n 🔄 Rotate your phone for a nicer experience. 🔄 "
+      );
     }
 
     socket.on(
@@ -341,6 +349,7 @@ class Game extends Component<GameProps, GameState> {
       suspendLeaveBtnClickHandler,
       showPicker,
       suspendPlayerClickHandlers,
+      emojiSheet,
     } = this.state;
     const { position, gameCode } = this.props;
 
@@ -380,6 +389,14 @@ class Game extends Component<GameProps, GameState> {
                 suspendScoreboardBtnClickHandler
               }
             />
+            {this.state.emojiSheet !== null && (
+              // This is very hacky, but it was the only way I managed to cache the emoji sheet...
+              <img
+                src={this.state.emojiSheet}
+                style={{ height: "0", width: "0" }}
+                alt={""}
+              ></img>
+            )}
           </>
         )}
         {showScoreboard && (
@@ -399,6 +416,7 @@ class Game extends Component<GameProps, GameState> {
           <EmojiPicker
             handleOutsideClick={this.handleOutsideClick.bind(this)}
             handleClickPickerEmoji={this.handleClickPickerEmoji.bind(this)}
+            emojiSheet={emojiSheet}
           />
         )}
       </GameWrapper>

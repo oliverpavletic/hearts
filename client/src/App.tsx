@@ -25,7 +25,6 @@ function App(): ReactElement {
         }
         const s = io(baseURL);
         setSocket(s);
-        console.log(s);
       });
   }, []);
 
