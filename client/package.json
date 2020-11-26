@@ -1,6 +1,5 @@
 {
   "name": "hearts-client",
-  "homepage": "https://oliverpavletic.github.io",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,8 +32,7 @@
   },
   "proxy": "https://localhost:4000",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -b main -d build",
+    "clean": "rm -rf ./node_modules ./build && rm ./package-lock.json",
     "prestart": "npx eslint . --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",

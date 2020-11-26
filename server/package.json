@@ -4,11 +4,12 @@
   "description": "A server for my hearts game.",
   "main": "./build/src/server.js",
   "scripts": {
+    "clean": "rm -rf ./node_modules ./build && rm ./package-lock.json",
     "tsc": "tsc",
-    "prestart": "npm run tsc && npm link typescript && npm test",
-    "start": "node ./build/src/server.js",
     "pretest": "npx eslint . --fix",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
+    "prestart": "npm run tsc && npm link typescript && npm test",
+    "start": "node ./build/src/server.js"
   },
   "author": "Oliver Pavletic",
   "license": "MIT",
