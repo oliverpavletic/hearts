@@ -106,7 +106,7 @@ io.on('connection', (socket: SocketIO.Socket) => {
     const gameCode = payload.gameCode
     try {
       console.log('CLIENT_JOIN_GAME', payload)
-      const joinInfo = gameManager.joinGame(playerName, gameCode).toJSON()
+      const joinInfo = gameManager.joinGame(gameCode, playerName, userId, socket).toJSON()
       socket.emit(SocketEvent.SERVER_SENT_JOIN_INFO, joinInfo)
     } catch (e) {
       console.log('Error:', e)

@@ -6,6 +6,7 @@ import { GameCodeGenerator } from './gameCodeGenerator'
 import { JoinInfo } from './joinInfo'
 import { JSONCard } from './jsonCard'
 import { Card } from './card'
+import { Socket } from 'socket.io'
 
 export class GameManager {
   private readonly games: Map<string, Game>
@@ -36,7 +37,7 @@ export class GameManager {
     return new JoinInfo(gameCode, position)
   }
 
-  public joinGame (gameCode: string, userId: string): JoinInfo {
+  public joinGame (gameCode: string, playerName: string, userId: string, socket: Socket): JoinInfo {
     if (!this.games.has(gameCode)) {
       throw new Error(`There is no game with gameCode=${gameCode}`)
     }
@@ -45,6 +46,8 @@ export class GameManager {
     const game = this.games.get(gameCode)!
 
     this.userIdToGameCode.set(userId, gameCode)
+
+    game.addOnlinePlayer(playerName, userId, socket)
 
     const position = game.getPlayerPosition(userId)
 
