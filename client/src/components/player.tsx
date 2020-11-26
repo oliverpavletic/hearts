@@ -111,7 +111,7 @@ const Score = styled.div`
 `;
 
 const AddBotButtonWrapper = styled.div`
-  font-size: 0.85em;
+  font-size: 0.75em;
   position: absolute;
   left: 50%;
   top: 50%;
