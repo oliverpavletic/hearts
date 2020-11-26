@@ -4,6 +4,10 @@ import { Button, ButtonGroup, Form } from "react-bootstrap";
 
 import { SocketEvent } from "../types/socketEvent";
 
+import GitHubLogo from "../GitHub-Mark-Light-64px.png";
+
+const GITHUB_LINK = "https://github.com/oliverpavletic/hearts";
+
 const Title = styled.div`
   font-family: "Baloo Tamma 2", cursive;
   font-size: 5em;
@@ -17,6 +21,17 @@ const Container = styled.div`
   padding: 2em;
   @media only screen and (max-width: 27em) {
     width: 90%;
+  }
+`;
+
+const GitHubLogoContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0.1em;
+  transform: scale(0.5);
+  &:hover {
+    filter: invert(100%);
   }
 `;
 
@@ -164,6 +179,11 @@ class LandingPage extends Component<LandingPageProps, LandingPageState> {
             </Button>
           </Form>
         </Container>
+        <GitHubLogoContainer>
+          <a href={GITHUB_LINK} rel="noopener noreferrer" target="_blank">
+            <img src={GitHubLogo} alt={""}></img>
+          </a>
+        </GitHubLogoContainer>
       </>
     );
   }
