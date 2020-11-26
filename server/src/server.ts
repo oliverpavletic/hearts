@@ -7,13 +7,13 @@ import cookieParser from 'cookie-parser'
 import { GameManager } from './game/gameManager'
 import { SocketEvent } from './socketEvent'
 import { JSONCard } from './game/jsonCard'
+import { PORT, MODE, DEPLOYMENT_MODES, PUBLIC_PATH, STATIC_PATH } from './config'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const uuid = require('uuid')
 const app = express()
 const server = new http.Server(app)
 const io = socket_io(server, { cookie: false })
-const PORT = 4000
 const secret = 'applesNoranges'
 const cookieOptions: express.CookieOptions = {
   maxAge: 1000 * 60 * 15, // 15 minutes
@@ -26,6 +26,12 @@ const gameManager = new GameManager()
 // ****************************************
 // *********** Express Routes  ************
 // ****************************************
+
+console.log(`MODE=DEPLOYMENT_MODES.${DEPLOYMENT_MODES.PROD}`)
+if (MODE === DEPLOYMENT_MODES.PROD) {
+  app.use(express.static(STATIC_PATH))
+  app.use(express.static(PUBLIC_PATH))
+}
 
 app.use(express.json())
 app.use(cookieParser(secret))

@@ -8,8 +8,10 @@
     "tsc": "tsc",
     "pretest": "npx eslint . --fix",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
-    "prestart": "npm run tsc && npm link typescript && npm test",
-    "start": "node ./build/src/server.js"
+    "build": "npm run tsc && npm link typescript && npm test",
+    "prestart": "npm run build",
+    "start": "node ./build/src/server.js",
+    "start-skip-build": "node ./build/src/server.js"
   },
   "author": "Oliver Pavletic",
   "license": "MIT",

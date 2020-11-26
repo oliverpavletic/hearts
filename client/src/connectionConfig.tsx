@@ -1,7 +1,7 @@
 const DEV_BASE_URL = "";
 const PROD_BASE_URL = "";
 
-export const getBaseURL = () => {
+export const getBaseURL = (): string => {
   let baseURL: string;
   if (process.env.NODE_ENV === "production") {
     baseURL = PROD_BASE_URL;

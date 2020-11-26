@@ -95,7 +95,7 @@ class Game extends Component<GameProps, GameState> {
       .then((serverGameState) => {
         console.log(serverGameState);
         if ("boardCards" in serverGameState) {
-          console.log('yes');
+          console.log("yes");
           this.setGameStateFromJSON(serverGameState);
         }
       });

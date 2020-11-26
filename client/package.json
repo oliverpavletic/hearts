@@ -30,7 +30,6 @@
     "styled-components": "^5.2.0",
     "typescript": "^3.8.3"
   },
-  "proxy": "https://localhost:4000",
   "scripts": {
     "clean": "rm -rf ./node_modules ./build && rm ./package-lock.json",
     "prestart": "npx eslint . --fix",

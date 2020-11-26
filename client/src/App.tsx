@@ -1,10 +1,10 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import './App.css';
-import io from 'socket.io-client';
+import React, { useState, useEffect, ReactElement } from "react";
+import "./App.css";
+import io from "socket.io-client";
 
-import MainWrapper from './components/mainWrapper';
-import { JoinInfo } from './types/joinInfo';
-import { getBaseURL } from './connectionConfig';
+import MainWrapper from "./components/mainWrapper";
+import { JoinInfo } from "./types/joinInfo";
+import { getBaseURL } from "./connectionConfig";
 
 function App(): ReactElement {
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
@@ -13,24 +13,28 @@ function App(): ReactElement {
   useEffect(() => {
     const baseURL = getBaseURL();
 
-    fetch(baseURL + '/connect', {
+    fetch(baseURL + "/connect", {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
       .then((res) => res.json())
       .then((_joinInfo) => {
-        if ('gameCode' in _joinInfo && 'position' in _joinInfo) {
+        if ("gameCode" in _joinInfo && "position" in _joinInfo) {
           setJoinInfo(_joinInfo);
         }
-        let s = io(baseURL);
+        const s = io(baseURL);
         setSocket(s);
         console.log(s);
       });
   }, []);
 
-  return <>{socket !== null && <MainWrapper joinInfo={joinInfo} socket={socket} />}</>;
+  return (
+    <>
+      {socket !== null && <MainWrapper joinInfo={joinInfo} socket={socket} />}
+    </>
+  );
 }
 
 export default App;
