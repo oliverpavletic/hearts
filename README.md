@@ -15,4 +15,4 @@ Demo:
 
 Run Locally:
 
-- `npm build && npm start` from the root directory.
+- `npm run build && npm start` from the root directory.
