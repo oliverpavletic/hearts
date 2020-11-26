@@ -11,7 +11,7 @@ Built with:
 
 Demo:
 
-- https://quiet-mesa-01655.herokuapp.com/
+- https://playhearts.herokuapp.com/
 
 Run Locally:
 
