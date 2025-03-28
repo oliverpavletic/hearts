@@ -9,10 +9,10 @@ Built with:
 - Socket.IO
 - Express
 
-Demo:
-
-- https://playhearts.herokuapp.com/
-
 Run Locally:
 
-- `npm run build && npm start` from the root directory.
+- `NODE_OPTIONS=--openssl-legacy-provider npm run build && npm start` from the root directory.
+
+Demo GIF:
+
+![](game-demo.gif)

@@ -6,7 +6,7 @@
     "clean-client": "cd client && npm clean",
     "clean-server": "cd server && npm clean",
     "clean": "npm run clean-client && npm run clean-server",
-    "build-client": "cd client && npm install && npm run build && mkdir -p ../server/build/client && cp -r ./build ../server/build/client && cp -r ./public ../server/build/client",
+    "build-client": "cd client && npm install --legacy-peer-deps && npm run build && mkdir -p ../server/build/client && cp -r ./build ../server/build/client && cp -r ./public ../server/build/client",
     "build-server": "cd server && npm install && npm run build",
     "build": "npm run build-client && npm run build-server",
     "start": "cd server && npm run start-skip-build"
